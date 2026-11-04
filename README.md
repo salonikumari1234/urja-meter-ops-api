@@ -210,7 +210,7 @@ urja-meter-ops-api/
    UPSTREAM_PORTAL_URL=https://urja-ops.flockenergy.tech
    UPSTREAM_USERNAME=your_username_here
    UPSTREAM_PASSWORD=your_password_here
-   API_KEY_SECRET=urja_ops_secret_api_key_2026
+   API_KEY_SECRET=YOUR_API_KEY
    API_KEY_HEADER_NAME=X-API-Key
    ENVIRONMENT=development
    ```
@@ -251,7 +251,7 @@ All endpoints under `/api/v1/` (except the public `/health` probe) require the A
 
 | Header Name | Required | Default Value (Dev) | Description |
 | :--- | :--- | :--- | :--- |
-| `X-API-Key` | **Yes** | `urja_ops_secret_api_key_2026` | Pre-shared key verified with constant-time equality. |
+| `X-API-Key` | **Yes** | `YOUR_API_KEY` | Pre-shared key verified with constant-time equality. |
 
 Requests omitting or supplying an invalid key receive an immediate `401 Unauthorized` response:
 ```json
@@ -512,7 +512,7 @@ curl -X GET "http://localhost:8000/api/v1/summary" \
 
 ## 11. Error Handling
 
-Errors consistently follow RFC 7807 problem details semantics encapsulated within our standard error envelope:
+Errors follow a consistent JSON error envelope inspired by RFC 7807 Problem Details semantics:
 
 ```json
 {
