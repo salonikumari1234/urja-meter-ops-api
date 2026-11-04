@@ -27,14 +27,14 @@ This project delivers a **clean, secure, decoupled, highly performant, and well-
 - **Hierarchical Grid Graph**: Reconstructs the 7-level electrical distribution hierarchy from Jaipur Zone down to Distribution Transformers.
 - **Comprehensive Security**: Constant-time API Key verification (`X-API-Key`), OWASP API Security Top 10 defenses, input bounds checking, strict Pydantic v2 schemas, and zero secret leakage.
 - **Standardized Response Envelope**: Uniform contract `{ "success": true, "data": ..., "meta": ... }` and RFC 7807 compliant error format.
-- **Full Automated Test Suite**: 30 automated unit, integration, contract, security, and reliability tests executing in < 0.5s.
+- **Full Automated Test Suite**: 30 automated unit, integration, contract, security, and reliability tests.
 - **Production Containerization**: Multi-stage Docker build with non-root security execution and Docker Compose orchestration.
 
 ---
 
 ## 3. Architecture Overview
 
-The service adheres strictly to SOLID principles, dependency inversion, and separation of concerns:
+The service follows SOLID-inspired design principles and emphasizes dependency inversion and separation of concerns:
 
 ```mermaid
 flowchart TD
@@ -251,7 +251,7 @@ All endpoints under `/api/v1/` (except the public `/health` probe) require the A
 
 | Header Name | Required | Default Value (Dev) | Description |
 | :--- | :--- | :--- | :--- |
-| `X-API-Key` | **Yes** | `urja_ops_secret_api_key_2026` | Pre-shared key verified with constant-time equality. |
+| `X-API-Key` | **Yes** | Configured via `API_KEY_SECRET` | Pre-shared key verified with constant-time equality. |
 
 Requests omitting or supplying an invalid key receive an immediate `401 Unauthorized` response:
 ```json
@@ -320,7 +320,7 @@ All endpoints are versioned under `/api/v1`.
 **Request**:
 ```bash
 curl -X GET "http://localhost:8000/api/v1/meters?make=HPL&phase_type=single&limit=2" \
-     -H "X-API-Key: urja_ops_secret_api_key_2026"
+     -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Response (`200 OK`)**:
@@ -375,7 +375,7 @@ curl -X GET "http://localhost:8000/api/v1/meters?make=HPL&phase_type=single&limi
 **Request**:
 ```bash
 curl -X GET "http://localhost:8000/api/v1/meters/J100000" \
-     -H "X-API-Key: urja_ops_secret_api_key_2026"
+     -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Response (`200 OK`)**:
@@ -419,7 +419,7 @@ curl -X GET "http://localhost:8000/api/v1/meters/J100000" \
 **Request**:
 ```bash
 curl -X GET "http://localhost:8000/api/v1/meters/J100000/readings?limit=2" \
-     -H "X-API-Key: urja_ops_secret_api_key_2026"
+     -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Response (`200 OK`)**:
@@ -605,7 +605,7 @@ The OpenAPI 3.1 specification is generated directly from the Pydantic schemas an
    - *Rationale*: The total dataset comprises 403 meters and 40 transformers (< 500 KB total RAM). Introducing an external database would add operational friction, migration overhead, and infrastructure complexity without any technical benefit.
 2. **Pure ASGI Middleware vs. BaseHTTPMiddleware**:
    - *Decision*: Implemented pure ASGI middleware for correlation IDs and duration metrics.
-   - *Rationale*: Starlette's `BaseHTTPMiddleware` incurs context-switching overhead and can deadlock test runners in headless environments. Pure ASGI middleware executes synchronously in the ASGI pipeline with zero overhead.
+   - *Rationale*: Starlette's `BaseHTTPMiddleware` incurs context-switching overhead and can deadlock test runners in headless environments. Pure ASGI middleware executes synchronously in the ASGI pipeline with low overhead.
 3. **Pydantic v2 Type Coercion**:
    - Upstream GPS coordinates are returned as strings (`"26.9389..."`). The schema layer coerces them into native IEEE 754 floats.
 
