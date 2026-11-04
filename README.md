@@ -251,7 +251,7 @@ All endpoints under `/api/v1/` (except the public `/health` probe) require the A
 
 | Header Name | Required | Default Value (Dev) | Description |
 | :--- | :--- | :--- | :--- |
-| `X-API-Key` | **Yes** | `YOUR_API_KEY` | Pre-shared key verified with constant-time equality. |
+| `X-API-Key` | **Yes** | `urja_ops_secret_api_key_2026` | Pre-shared key verified with constant-time equality. |
 
 Requests omitting or supplying an invalid key receive an immediate `401 Unauthorized` response:
 ```json
@@ -464,7 +464,7 @@ curl -X GET "http://localhost:8000/api/v1/meters/J100000/readings?limit=2" \
 **Request**:
 ```bash
 curl -X GET "http://localhost:8000/api/v1/summary" \
-     -H "X-API-Key: urja_ops_secret_api_key_2026"
+     -H "X-API-Key: YOUR_API_KEY"
 ```
 
 **Response (`200 OK`)**:
